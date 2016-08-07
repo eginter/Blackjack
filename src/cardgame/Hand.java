@@ -20,6 +20,9 @@ public class Hand {
 		for (Card card : hand) {
 			value += card.getValue();
 		}
+		if (value > 21 && hasAce()){
+			return value - 10;
+		}
 		return value;
 	}
 	
@@ -35,6 +38,14 @@ public class Hand {
 		} 
 	}
 
+	public boolean hasAce(){
+		for (Card card : hand) {
+			if (card.getRank().equals(Rank.ACE));
+				return true;
+		}
+		return false;
+	}
+	
 	public List<Card> getHand() {
 		return hand;
 	}

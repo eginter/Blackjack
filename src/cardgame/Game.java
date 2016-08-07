@@ -25,7 +25,6 @@ public class Game {
 
 	public void initialDeal() {
 
-		System.out.println("DEBUG: Cards in deck:" + deck.cardsLeft());
 		if (deck.cardsLeft() < 10) {
 			this.deck = new Deck();
 		}
@@ -37,17 +36,15 @@ public class Game {
 				hand.resetHand();
 				hand.addCard(deck);
 				hand.addCard(deck);
-				System.out.println(hand.getName() + "'s hand: " + hand.getValueofHand());
-				hand.displayHand();
-				System.out.println();
-
 			}
+			
+			displayTable();
 			if (isRoundOver()) {
 				initialDeal();
 			} else {
 				promptForAction(players.get(0), players.get(1));
 			}
-		}else{
+		} else {
 			System.out.println("\nThanks for playing.");
 			System.exit(0);
 		}
@@ -60,11 +57,7 @@ public class Game {
 		switch (choice) {
 		case 1:
 			p.addCard(deck);
-			for (Hand hand : players) {
-				System.out.println("\n\n" + hand.getName() + "'s hand: " + hand.getValueofHand());
-				hand.displayHand();
-
-			}
+			displayTable();
 			if (isRoundOver()) {
 				System.out.println("\n\n");
 				initialDeal();
@@ -84,7 +77,7 @@ public class Game {
 		while (players.get(0).getValueofHand() > players.get(1).getValueofHand() && !(isRoundOver())) {
 			System.out.println("Dealer drawing...");
 			players.get(1).addCard(deck);
-			players.get(1).displayHand();
+			displayTable();
 			if (isRoundOver()) {
 				initialDeal();
 			}
@@ -115,11 +108,19 @@ public class Game {
 		return (valueOfHand == 21) ? true : false;
 	}
 
-	// public void displayHands(){
-	// System.out.println("====== Dealer's Hand ======");
-	// System.out.println(players.get(1).getHand());
-	// System.out.println("====== Player's Hand ======");
-	// System.out.println(players.get(0).getHand());
-	// }
+	public void displayTable() {
+		System.out.println("-----------------------------------------------------");
+		System.out.println("                   Dealer's Hand: " + players.get(1).getValueofHand());
+		players.get(1).displayHand();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("                   Player's Hand:" + players.get(0).getValueofHand());
+		players.get(0).displayHand();
+		System.out.println();
+		System.out.println("------------------------------------------------------");
 
+	}
 }
