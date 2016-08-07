@@ -17,19 +17,38 @@ public class Hand {
 	
 	public int getValueofHand() {
 		int value = 0;
-		for (Card card : hand) {
+		for (Card card : this.hand) {
 			value += card.getValue();
 		}
-		if (value > 21 && hasAce()){
-			return value - 10;
+		if (howManyAces() > 0) {
+			if (value > 21) {
+				value -= 10 * howManyAces();
+				
+			}
 		}
 		return value;
 	}
 	
 	public void displayHand(){
+		String cardDisplay1="", cardDisplay2="", cardDisplay3="", cardDisplay4="", cardDisplay5="", cardDisplay6="", cardDisplay7="";
 		for (Card card : hand) {
-			System.out.print(" " + card.getRank() + card.getSymbol());
+			cardDisplay1 += " __________\t";
+			cardDisplay2 += "/ " + card.getSymbol() + card.getRank().getStringValue() + "       |\t";
+			cardDisplay3 += "|          |\t";
+			cardDisplay4 += "|          |\t";
+			cardDisplay5 += "|          |\t";
+			cardDisplay6 += "|       " + card.getSymbol() + card.getRank().getStringValue() + " |\t";
+			cardDisplay7 += "|_________//\t";
+		
+
 		}
+		System.out.print(cardDisplay1 + "\n");
+		System.out.print(cardDisplay2 + "\n");
+		System.out.print(cardDisplay3 + "\n");
+		System.out.print(cardDisplay4 + "\n");
+		System.out.print(cardDisplay5 + "\n");
+		System.out.print(cardDisplay6 + "\n");
+		System.out.print(cardDisplay7 + "\n");
 	}
 	
 	public void resetHand(){
@@ -38,12 +57,13 @@ public class Hand {
 		} 
 	}
 
-	public boolean hasAce(){
-		for (Card card : hand) {
-			if (card.getRank().equals(Rank.ACE));
-				return true;
+	public int howManyAces(){
+		int aceCount = 0;
+		for (Card card : this.hand) {
+			if (card.getRank() == (Rank.ACE))
+				aceCount++;
 		}
-		return false;
+		return aceCount;
 	}
 	
 	public List<Card> getHand() {

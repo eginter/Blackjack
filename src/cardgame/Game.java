@@ -37,7 +37,7 @@ public class Game {
 				hand.addCard(deck);
 				hand.addCard(deck);
 			}
-			
+
 			displayTable();
 			if (isRoundOver()) {
 				initialDeal();
@@ -74,47 +74,62 @@ public class Game {
 	}
 
 	public void dealerLogic() {
-		while (players.get(0).getValueofHand() > players.get(1).getValueofHand() && !(isRoundOver())) {
+
+		while (players.get(1).getValueofHand() < 17 && !(isRoundOver())) {
 			System.out.println("Dealer drawing...");
 			players.get(1).addCard(deck);
 			displayTable();
-			if (isRoundOver()) {
-				initialDeal();
-			}
 		}
-		System.out.println("\nDealer Wins.");
+		if (players.get(0).getValueofHand() == players.get(1).getValueofHand()) {
+			System.out.println("Player's tied: Push.");
+			initialDeal();
+		}
+		if (isRoundOver()) {
+			initialDeal();
+
+		}
+		if (players.get(0).getValueofHand() > players.get(1).getValueofHand()) {
+			System.out.println("\nPlayer Wins.");
+		} else {
+			System.out.println("\nDealer Wins.");
+		}
 		initialDeal();
+
 	}
 
 	public boolean isRoundOver() {
 		for (Hand hand : players) {
-			if (isBlackjack(hand.getValueofHand())) {
+			if (isBlackjack(hand)) {
 				System.out.println("\n" + hand.getName() + " has blackjack.");
-				return true;
-			} else if (isBust(hand.getValueofHand())) {
+				return false;
+			} else if (isBust(hand)) {
 				System.out.println("\n" + hand.getName() + " has busted.");
 				return true;
+			} else if (is21(hand)) {
+				System.out.println("\n" + hand.getName() + " has 21.");
+				return false;
 			}
-
 		}
 		return false;
+
 	}
 
-	public boolean isBust(int valueOfHand) {
-		return (valueOfHand > 21) ? true : false;
+	public boolean isBust(Hand hand) {
+		return (hand.getValueofHand() > 21) ? true : false;
 	}
 
-	public boolean isBlackjack(int valueOfHand) {
-		return (valueOfHand == 21) ? true : false;
+	public boolean isBlackjack(Hand hand) {
+		return (hand.getHand().size() == 2 && hand.getValueofHand() == 21) ? true : false;
+	}
+
+	public boolean is21(Hand hand) {
+		return (hand.getHand().size() == 2 && hand.getValueofHand() == 21) ? true : false;
 	}
 
 	public void displayTable() {
 		System.out.println("-----------------------------------------------------");
 		System.out.println("                   Dealer's Hand: " + players.get(1).getValueofHand());
 		players.get(1).displayHand();
-		System.out.println();
-		System.out.println();
-		System.out.println();
 		System.out.println();
 		System.out.println();
 		System.out.println("                   Player's Hand:" + players.get(0).getValueofHand());
