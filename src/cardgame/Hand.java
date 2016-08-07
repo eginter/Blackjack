@@ -10,11 +10,11 @@ public class Hand {
 	public Hand(String name) {
 		this.name = name;
 	}
-	
+
 	public void addCard(Deck d) {
 		hand.add(d.dealCard());
 	}
-	
+
 	public int getValueofHand() {
 		int value = 0;
 		for (Card card : this.hand) {
@@ -23,14 +23,15 @@ public class Hand {
 		if (howManyAces() > 0) {
 			if (value > 21) {
 				value -= 10 * howManyAces();
-				
+
 			}
 		}
 		return value;
 	}
-	
-	public void displayHand(){
-		String cardDisplay1="", cardDisplay2="", cardDisplay3="", cardDisplay4="", cardDisplay5="", cardDisplay6="", cardDisplay7="";
+
+	public void displayHand() {
+		String cardDisplay1 = "", cardDisplay2 = "", cardDisplay3 = "", cardDisplay4 = "", cardDisplay5 = "",
+				cardDisplay6 = "", cardDisplay7 = "";
 		for (Card card : hand) {
 			cardDisplay1 += " __________\t";
 			cardDisplay2 += "/ " + card.getSymbol() + card.getRank().getStringValue() + "       |\t";
@@ -39,7 +40,6 @@ public class Hand {
 			cardDisplay5 += "|          |\t";
 			cardDisplay6 += "|       " + card.getSymbol() + card.getRank().getStringValue() + " |\t";
 			cardDisplay7 += "|_________//\t";
-		
 
 		}
 		System.out.print(cardDisplay1 + "\n");
@@ -50,14 +50,14 @@ public class Hand {
 		System.out.print(cardDisplay6 + "\n");
 		System.out.print(cardDisplay7 + "\n");
 	}
-	
-	public void resetHand(){
+
+	public void resetHand() {
 		for (int i = 0; i < hand.size(); i++) {
 			hand.clear();
-		} 
+		}
 	}
 
-	public int howManyAces(){
+	public int howManyAces() {
 		int aceCount = 0;
 		for (Card card : this.hand) {
 			if (card.getRank() == (Rank.ACE))
@@ -65,7 +65,7 @@ public class Hand {
 		}
 		return aceCount;
 	}
-	
+
 	public List<Card> getHand() {
 		return hand;
 	}
@@ -86,7 +86,5 @@ public class Hand {
 	public String toString() {
 		return "Hand [hand=" + hand + "]";
 	}
-	
-	
 
 }

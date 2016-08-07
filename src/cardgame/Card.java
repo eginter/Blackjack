@@ -27,7 +27,7 @@ public class Card {
 		valueMap.put(Rank.QUEEN, 10);
 		valueMap.put(Rank.KING, 10);
 		valueMap.put(Rank.ACE, 11);
-		
+
 		unicodeMap.put(Suit.HEARTS, '\u2665');
 		unicodeMap.put(Suit.SPADES, '\u2660');
 		unicodeMap.put(Suit.CLUBS, '\u2663');
