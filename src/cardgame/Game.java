@@ -135,7 +135,7 @@ public class Game {
 	}
 
 	public boolean is21(Hand hand) {
-		return (hand.getHand().size() == 2 && hand.getValueofHand() == 21) ? true : false;
+		return (hand.getHand().size() > 2 && hand.getValueofHand() == 21) ? true : false;
 	}
 
 	public void displayTable() {
