@@ -1,7 +1,7 @@
 # Blackjack
 Skill Distillery Week 3 Project: Blackjack.
 
-![alt tag] (https://github.com/eginter/Blackjack/Screen Shot 2016-08-07 at 6.39.07 PM.png)
+![alt tag] (https://github.com/eginter/Blackjack/blob/master/Screen%20Shot%202016-08-07%20at%206.39.07%20PM.png)
 
 
 ### Application goals: 
