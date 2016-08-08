@@ -20,7 +20,7 @@ Demonstrate proper object-oriented design to model the card game blackjack. Prac
 ### Features:
 * Accounts for ace's 1/11 values.
 * User betting.
-* Full-up ASCII Gui.
+* Full-up ascii Gui.
 * Hides dealers hole card.
 
 
