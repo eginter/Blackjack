@@ -29,7 +29,7 @@ public class Hand {
 		return value;
 	}
 
-	public void displayHand() {
+	public void displayHand(boolean isHidden) {
 		String cardDisplay1 = "", cardDisplay2 = "", cardDisplay3 = "", cardDisplay4 = "", cardDisplay5 = "",
 				cardDisplay6 = "", cardDisplay7 = "";
 		for (Card card : hand) {
@@ -40,7 +40,16 @@ public class Hand {
 			cardDisplay5 += "|          |\t";
 			cardDisplay6 += "|       " + card.getSymbol() + card.getRank().getStringValue() + " |\t";
 			cardDisplay7 += "|_________//\t";
-
+			if (isHidden) {
+				cardDisplay1 += " __________\t";
+				cardDisplay2 += "/          |\t";
+				cardDisplay3 += "|          |\t";
+				cardDisplay4 += "|          |\t";
+				cardDisplay5 += "|          |\t";
+				cardDisplay6 += "|          |\t";
+				cardDisplay7 += "|_________//\t";
+				break;
+			}
 		}
 		System.out.print(cardDisplay1 + "\n");
 		System.out.print(cardDisplay2 + "\n");

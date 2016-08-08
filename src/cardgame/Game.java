@@ -1,6 +1,7 @@
 package cardgame;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,57 +9,70 @@ public class Game {
 	private Deck deck;
 	private Player p;
 	private double wager;
+	private boolean isHidden = true;
 	List<Hand> players = new ArrayList<>();
 
 	Scanner scanner = new Scanner(System.in);
 
 	public Game() {
-		this.deck = new Deck();
-		Hand player = new Hand("Player");
-		Hand dealer = new Hand("Dealer");
-		this.p = new Player(player, 1000);
+		this.deck = new Deck(); // Generate a new shuffled deck.
+		Hand player = new Hand("Player"); // Create player hand.
+		Hand dealer = new Hand("Dealer"); // Create dealer hand.
+		this.p = new Player(player, 1000);// Start player with $1000
 		players.add(player);
 		players.add(dealer);
 	}
 
 	public void startGame() {
-		welcomeMessage();
 		initialDeal();
 
 	}
 
 	public void initialDeal() {
-		String choice = "";
-		if (deck.cardsLeft() < 10) {
+		isHidden = true; // Hide dealers hole card.
+		int choice = -1;
+		if (deck.cardsLeft() < 10) { // If less than 10 card, fetch new deck.
 			this.deck = new Deck();
 		}
-		do {
-			System.out.println("Press 'enter' to play a hand of blackjack (Q to quit)");
-			choice = scanner.nextLine();
-			wager = p.placeWager();
+		welcomeMessage();
+		while (choice != 1 || choice != 2) {
+			try {
+				choice = scanner.nextInt();
 
-			for (Hand hand : players) {
-				hand.resetHand();
-				hand.addCard(deck);
-				hand.addCard(deck);
-			}
+				if (choice != 2) {
 
-			displayTable();
-			if (isRoundOver()) {
-				initialDeal();
-			} else {
-				promptForAction(players.get(0), players.get(1));
+					wager = p.placeWager();
+
+					for (Hand hand : players) {
+						hand.resetHand();
+						hand.addCard(deck);
+						hand.addCard(deck);
+					}
+
+					displayTable();
+					if (isRoundOver()) {
+						initialDeal();
+					} else {
+						promptForAction(players.get(0), players.get(1));
+					}
+
+				} else {
+					System.out.println("\nThanks for playing.");
+					System.exit(0);
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Not a valid choice.");
+				scanner.nextLine();
 			}
-		} while (choice.equalsIgnoreCase("q"));
-		System.out.println("\nThanks for playing.");
-		System.exit(0);
+		}
 	}
 
 	public void promptForAction(Hand p, Hand d) {
+
 		System.out.println("\nHit(1) or Stay(2):");
-		int choice = scanner.nextInt();
+		int selection = scanner.nextInt();
 		scanner.nextLine();
-		switch (choice) {
+		switch (selection) {
 		case 1:
 			p.addCard(deck);
 			displayTable();
@@ -70,6 +84,7 @@ public class Game {
 			}
 			break;
 		case 2:
+			isHidden = false;
 			dealerLogic();
 
 		default:
@@ -85,6 +100,8 @@ public class Game {
 			displayTable();
 		}
 		if (players.get(0).getValueofHand() == players.get(1).getValueofHand()) {
+			isHidden = false;
+			displayTable();
 			System.out.println("Player's tied: Push.");
 			p.setWallet(p.getWallet() + wager);
 			initialDeal();
@@ -94,32 +111,36 @@ public class Game {
 
 		}
 		if (players.get(0).getValueofHand() > players.get(1).getValueofHand() && players.get(1).getValueofHand() < 22) {
-			System.out.println("\nPlayer Wins.");
+			System.out.println("Player Wins.");
 			if (isBlackjack(players.get(0))) {
 				p.setWallet(p.getWallet() + (wager * (2 / 3)));
 			}
 			p.setWallet(p.getWallet() + (wager * 2));
 		} else {
-			System.out.println("\nDealer Wins.");
+			isHidden = false;
+			displayTable();
+			System.out.println("Dealer Wins.");
 		}
 		initialDeal();
 
 	}
 
 	public boolean isRoundOver() {
+		if (players.get(0).getHand().size() == 5 && players.get(0).getValueofHand() <= 21) {
+			System.out.println("Player wins by 5 card rule.");
+			p.setWallet(p.getWallet() + (wager * 2));
+			return true;
+		}
 		for (Hand hand : players) {
 			if (isBlackjack(hand)) {
-				System.out.println("\n" + hand.getName() + " has blackjack.");
+				System.out.println(hand.getName() + " has blackjack.");
 				return false;
 			} else if (isBust(hand)) {
-				System.out.println("\n" + hand.getName() + " has busted.");
+				System.out.println(hand.getName() + " has busted.");
 				if (isBust(players.get(1))) {
 					p.setWallet(p.getWallet() + (wager * 2));
 				}
 				return true;
-			} else if (is21(hand)) {
-				System.out.println("\n" + hand.getName() + " has 21.");
-				return false;
 			}
 		}
 		return false;
@@ -134,20 +155,15 @@ public class Game {
 		return (hand.getHand().size() == 2 && hand.getValueofHand() == 21) ? true : false;
 	}
 
-	public boolean is21(Hand hand) {
-		return (hand.getHand().size() > 2 && hand.getValueofHand() == 21) ? true : false;
-	}
-
 	public void displayTable() {
 		System.out.println("-----------------------------------------------------");
-		System.out.println("                   Dealer's Hand: " + players.get(1).getValueofHand());
-		players.get(1).displayHand();
+		System.out.println("                   Dealer's Hand: ");
+		players.get(1).displayHand(isHidden);
 		System.out.println();
-		System.out.println();
-		System.out.println("                   Player's Hand: " + players.get(0).getValueofHand() + "   wallet: $"
-				+ p.getWallet());
-		players.get(0).displayHand();
-		System.out.println();
+		System.out.println(
+				"                   Player's Hand: " + players.get(0).getValueofHand() + "\tWager: $" + this.wager);
+		players.get(0).displayHand(false);
+		System.out.println("Wallet: $" + p.getWallet());
 		System.out.println("------------------------------------------------------");
 
 	}
@@ -156,9 +172,8 @@ public class Game {
 		System.out.println("******************************************************");
 		System.out.println("*      ~Welcome to Elijah's Extortion Emporium~      *");
 		System.out.println("*                                                    *");
-		System.out.println("*                                                    *");
-		System.out.println("*                                                    *");
-		System.out.println("*                                                    *");
+		System.out.println("*     1) Play Hand of blackjack                      *");
+		System.out.println("*     2) Quit                                        *");
 		System.out.println("*                                                    *");
 		System.out.println("******************************************************");
 	}
